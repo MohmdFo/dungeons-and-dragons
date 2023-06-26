@@ -146,3 +146,37 @@ def get_location(coordinates: List[Tuple[int, int]], population: int) -> List[Tu
         get_location(coordinates, population)  # Returns [(0, 0), (2, 2), (3, 3)]
     """
     return random.sample(coordinates, population)
+
+
+def get_valid_positions(grid: List[Tuple[int, int]], player: Tuple[int, int], door: Tuple[int, int]) -> List[Tuple[int, int]]:
+    """
+    Returns a list of all valid positions for a dragon.
+
+    Args:
+        grid: A list of all positions within the grid.
+        player: The current position of the player.
+        door: The current position of the door.
+
+    Returns:
+        A list of tuples representing valid positions for a dragon.
+    """
+    valid_positions = [pos for pos in grid if pos != player and pos != door]
+    return valid_positions
+
+
+def move_dragon(dragon: Tuple[int, int], other_dragon: Tuple[int, int], valid_positions: List[Tuple[int, int]]) -> Tuple[int, int]:
+    """
+    Moves the dragon to a new random position from the list of valid positions with a 30% probability.
+
+    Args:
+        dragon: The current position of the dragon.
+        other_dragon: The current position of the other dragon.
+        valid_positions: A list of tuples representing valid positions for a dragon.
+
+    Returns:
+        A tuple representing the new position of the dragon.
+    """
+    valid_positions = [pos for pos in valid_positions if pos != other_dragon]
+    if valid_positions and random.random() < 0.3:
+        dragon = random.choice(valid_positions)
+    return dragon

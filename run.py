@@ -5,7 +5,9 @@ from helpers.funcs import (
     get_moves,
     draw_map,
     move_player,
-    clear_screen
+    clear_screen,
+    get_valid_positions,
+    move_dragon,
 )
 
 
@@ -38,6 +40,9 @@ while playing:
 
     if direction in valid_moves:
         player = move_player(player, direction)
+        valid_positions = get_valid_positions(grid, player, door)
+        dragon1 = move_dragon(dragon1, dragon2, valid_positions)
+        dragon2 = move_dragon(dragon2, dragon1, valid_positions)
         if player == dragon1 or player == dragon2:
             print("You lost the game!")
             break
