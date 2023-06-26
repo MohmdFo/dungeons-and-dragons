@@ -41,6 +41,27 @@ def move_player(player, direction):
     return x, y
 
 
+def draw_map(grid_width: int, grid_height: int, player: Tuple[int, int]) -> None:
+    """
+    Prints a grid map of the game.
+
+    Args:
+        grid_width: An integer specifying the width of the grid.
+        grid_height: An integer specifying the height of the grid.
+        player: The coordinates of the player, represented as a tuple (x, y).
+    
+    Returns:
+        None.
+    """
+    for y in range(grid_height):
+        for x in range(grid_width):
+            if (x, y) == player:
+                print('X', end=' ')
+            else:
+                print('_', end=' ')
+        print()
+
+
 def create_coordinates(grid_width: int, grid_height: int) -> List[Tuple[int, int]]:
     """
     Creates a list of coordinates based on the given grid width and height.
@@ -98,6 +119,7 @@ player, door, dragon1, dragon2 = get_location(grid, 4)
 playing = True
 while playing:
     valid_moves = get_moves(player, x_dimension)
+    draw_map(x_dimension, y_dimension, player)
     print(f"You are in room: {player}")
     print(f"You can move in: {', '.join([move.value for move in valid_moves])}")
     direction_input = input("Please enter your move: ").casefold()
