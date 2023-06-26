@@ -1,3 +1,4 @@
+import os
 import random
 from enum import Enum
 from typing import List, Tuple
@@ -16,14 +17,18 @@ def get_moves(player, max_coordinate):
 
     if x == 0:
         moves.remove(Direction.LEFT)
-    if x == max_coordinate:
+    if x == max_coordinate - 1:
         moves.remove(Direction.RIGHT)
     if y == 0:
         moves.remove(Direction.UP)
-    if y == max_coordinate:
+    if y == max_coordinate - 1:
         moves.remove(Direction.DOWN)
 
     return moves
+
+
+def clear_screen():
+    return os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def move_player(player, direction):
@@ -138,5 +143,7 @@ while playing:
         if player == door:
             print("You won the game!")
             break
+        clear_screen()
     else:
         print("Please enter a valid move.")
+        clear_screen()
