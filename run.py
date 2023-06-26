@@ -1,5 +1,44 @@
 import random
+from enum import Enum
 from typing import List, Tuple
+
+
+class Direction(Enum):
+    UP = "up"
+    DOWN = "down"
+    LEFT = "left"
+    RIGHT = "right"
+
+
+def get_moves(player, max_coordinate):
+    moves = list(Direction)
+    x, y = player
+
+    if x == 0:
+        moves.remove(Direction.LEFT)
+    if x == max_coordinate:
+        moves.remove(Direction.RIGHT)
+    if y == 0:
+        moves.remove(Direction.UP)
+    if y == max_coordinate:
+        moves.remove(Direction.DOWN)
+
+    return moves
+
+
+def move_player(player, direction):
+    x, y = player
+
+    if direction == Direction.UP:
+        y -= 1
+    if direction == Direction.DOWN:
+        y += 1
+    if direction == Direction.LEFT:
+        x -= 1
+    if direction == Direction.RIGHT:
+        x += 1
+
+    return x, y
 
 
 def create_coordinates(grid_width: int, grid_height: int) -> List[Tuple[int, int]]:
@@ -58,4 +97,24 @@ player, door, dragon1, dragon2 = get_location(grid, 4)
 
 playing = True
 while playing:
-    move = input("Please enter your move: ").casefold()
+    valid_moves = get_moves(player, x_dimension)
+    print(f"You are in room: {player}")
+    print(f"You can move in: {', '.join([move.value for move in valid_moves])}")
+    direction_input = input("Please enter your move: ").casefold()
+
+    try:
+        direction = Direction(direction_input)
+    except ValueError:
+        print("Please enter a valid direction: up, down, left, or right.")
+        continue
+
+    if direction in valid_moves:
+        player = move_player(player, direction)
+        if player == dragon1 or player == dragon2:
+            print("You lost the game!")
+            break
+        if player == door:
+            print("You won the game!")
+            break
+    else:
+        print("Please enter a valid move.")
