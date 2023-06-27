@@ -181,8 +181,8 @@ def get_valid_positions(grid: Coordinates, player: Position, door: Position) -> 
 def move_dragon(dragon: Position, other_dragon: Position, player: Position, valid_positions: Coordinates) -> Position:
     """
     Moves the dragon to a new random position from the list of valid positions
-    with a 30% probability. If the player is within 3 squares of distance,
-    the dragon has a higher chance (70%) of moving towards the player.
+    with a 50% probability. If the player is within 3 squares of distance,
+    the dragon also has a 50% chance of moving towards the player.
 
     Args:
         dragon: The current position of the dragon.
@@ -193,19 +193,27 @@ def move_dragon(dragon: Position, other_dragon: Position, player: Position, vali
     Returns:
         A tuple representing the new position of the dragon.
     """
+    # Remove the other dragon's position from the list of valid positions
     valid_positions = [pos for pos in valid_positions if pos != other_dragon]
 
     # Calculate the Euclidean distance between the dragon and the player
     distance_to_player = ((player[0] - dragon[0]) ** 2 + (player[1] - dragon[1]) ** 2) ** 0.5
 
-    # Determine the probability of moving towards the player based on the distance
-    probability = 0.3 if distance_to_player > 3 else 0.7
+    # Determine the probability of moving - it's 50% in all cases now
+    probability_of_moving = 0.5
 
-    if valid_positions and random.random() < probability:
+    # Check if the dragon will move
+    if random.random() < probability_of_moving:
         # If the dragon is moving towards the player, select a valid position closer to the player
-        if probability == 0.7:
-            valid_positions = [pos for pos in valid_positions if ((pos[0] - player[0]) ** 2 + (pos[1] - player[1]) ** 2) ** 0.5 <= 1]
-        dragon = random.choice(valid_positions)
+        if distance_to_player <= 3:
+            valid_positions = [pos for pos in valid_positions if ((pos[0] - player[0]) ** 2 + (pos[1] - player[1]) ** 2) ** 0.5 <= distance_to_player]
+            # If there are no valid positions closer to the player, use all valid positions
+            if not valid_positions:
+                valid_positions = [pos for pos in valid_positions if pos != other_dragon]
+
+        # If there are valid positions, choose one randomly
+        if valid_positions:
+            dragon = random.choice(valid_positions)
     return dragon
 
 
