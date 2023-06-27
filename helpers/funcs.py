@@ -110,6 +110,10 @@ def draw_map(grid_width: int, grid_height: int, player: Position) -> None:
         for x in range(grid_width):
             if (x, y) == player:
                 print('X', end=' ')
+            # elif (x, y) == door:
+            #     print('D', end=' ')
+            # elif (x, y) == dragon1 or (x, y) == dragon2:
+            #     print('E', end=' ')
             else:
                 print('_', end=' ')
         print()
@@ -174,19 +178,57 @@ def get_valid_positions(grid: Coordinates, player: Position, door: Position) -> 
     return valid_positions
 
 
-def move_dragon(dragon: Position, other_dragon: Position, valid_positions: Coordinates) -> Position: # noqa E501
+def move_dragon(dragon: Position, other_dragon: Position, player: Position, valid_positions: Coordinates) -> Position:
     """
-    Moves the dragon to a new random position from the list of valid positions with a 30% probability. # noqa E501
+    Moves the dragon to a new random position from the list of valid positions
+    with a 30% probability. If the player is within 3 squares of distance,
+    the dragon has a higher chance (70%) of moving towards the player.
 
     Args:
         dragon: The current position of the dragon.
         other_dragon: The current position of the other dragon.
+        player: The current position of the player.
         valid_positions: A list of tuples representing valid positions for a dragon.
 
     Returns:
         A tuple representing the new position of the dragon.
     """
     valid_positions = [pos for pos in valid_positions if pos != other_dragon]
-    if valid_positions and random.random() < 0.3:
+
+    # Calculate the Euclidean distance between the dragon and the player
+    distance_to_player = ((player[0] - dragon[0]) ** 2 + (player[1] - dragon[1]) ** 2) ** 0.5
+
+    # Determine the probability of moving towards the player based on the distance
+    probability = 0.3 if distance_to_player > 3 else 0.7
+
+    if valid_positions and random.random() < probability:
+        # If the dragon is moving towards the player, select a valid position closer to the player
+        if probability == 0.7:
+            valid_positions = [pos for pos in valid_positions if ((pos[0] - player[0]) ** 2 + (pos[1] - player[1]) ** 2) ** 0.5 <= 1]
         dragon = random.choice(valid_positions)
     return dragon
+
+
+def is_player_near_dragon(player: Position, dragon1: Position, dragon2: Position) -> bool:
+    """
+    Calculates the distance between the player and the dragons,
+    and returns True if the distance is 1 for either dragon.
+
+    Args:
+        player: A tuple representing the player's position (x, y).
+        dragon1: A tuple representing the first dragon's position (x, y).
+        dragon2: A tuple representing the second dragon's position (x, y).
+
+    Returns:
+        A boolean value indicating if the player is near either dragon.
+
+    Example:
+        player = (2, 3)
+        dragon1 = (3, 3)
+        dragon2 = (2, 4)
+        is_player_near_dragon(player, dragon1, dragon2)  # Returns True
+    """
+    distance_to_dragon1 = ((player[0] - dragon1[0]) ** 2 + (player[1] - dragon1[1]) ** 2) ** 0.5
+    distance_to_dragon2 = ((player[0] - dragon2[0]) ** 2 + (player[1] - dragon2[1]) ** 2) ** 0.5
+    result = distance_to_dragon1 == 1 or distance_to_dragon2 == 1
+    return result

@@ -8,6 +8,7 @@ from helpers.funcs import (
     clear_screen,
     get_valid_positions,
     move_dragon,
+    is_player_near_dragon
 )
 
 
@@ -41,12 +42,15 @@ while playing:
     if direction in valid_moves:
         player = move_player(player, direction)
         valid_positions = get_valid_positions(grid, player, door)
-        dragon1 = move_dragon(dragon1, dragon2, valid_positions)
-        dragon2 = move_dragon(dragon2, dragon1, valid_positions)
+        dragon1 = move_dragon(dragon1, dragon2, player, valid_positions)
+        dragon2 = move_dragon(dragon2, dragon1, player, valid_positions)
         if player == dragon1 or player == dragon2:
             print("You lost the game!")
             break
-        if player == door:
+        elif is_player_near_dragon(player, dragon1, dragon2):
+            print("You lost the game! Dragon saw you")
+            break
+        elif player == door:
             print("You won the game!")
             break
         clear_screen()
