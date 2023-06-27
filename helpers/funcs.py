@@ -1,11 +1,15 @@
 import os
 import random
-from typing import List, Tuple
+from typing import List
 
 from .enums import Direction
+from .types import (
+    Position,
+    Coordinates
+)
 
 
-def get_moves(player: Tuple[int, int], max_coordinate: int) -> List[Direction]:
+def get_moves(player: Position, max_coordinate: int) -> List[Direction]:
     """
     Retrieves the available moves for the player within the given grid dimensions.
 
@@ -50,13 +54,14 @@ def clear_screen() -> int:
     return os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def move_player(player: Tuple[int, int], direction: Direction) -> Tuple[int, int]:
+def move_player(player: Position, direction: Direction) -> Position:
     """
     Moves the player in the specified direction.
 
     Args:
         player: A tuple representing the current player position as (x, y).
-        direction: The direction in which the player should move (one of the Direction enum values).
+        direction: The direction in which the player should move
+                   (one of the Direction enum values).
 
     Returns:
         A tuple representing the new player position after the move as (new_x, new_y).
@@ -68,9 +73,12 @@ def move_player(player: Tuple[int, int], direction: Direction) -> Tuple[int, int
         # Returns (2, 2)
 
     Note:
-        Assumes that the grid is represented with the origin (0, 0) in the top-left corner.
-        Moving "up" decreases the y-coordinate, moving "down" increases the y-coordinate,
-        moving "left" decreases the x-coordinate, and moving "right" increases the x-coordinate.
+        Assumes that the grid is represented with the origin
+        (0, 0)in the top-left corner.
+        Moving "up" decreases the y-coordinate, moving "down"
+        increases the y-coordinate,
+        moving "left" decreases the x-coordinate, and moving
+        "right" increases the x-coordinate.
     """
     x, y = player
 
@@ -86,7 +94,7 @@ def move_player(player: Tuple[int, int], direction: Direction) -> Tuple[int, int
     return x, y
 
 
-def draw_map(grid_width: int, grid_height: int, player: Tuple[int, int]) -> None:
+def draw_map(grid_width: int, grid_height: int, player: Position) -> None:
     """
     Prints a grid map of the game.
 
@@ -94,7 +102,7 @@ def draw_map(grid_width: int, grid_height: int, player: Tuple[int, int]) -> None
         grid_width: An integer specifying the width of the grid.
         grid_height: An integer specifying the height of the grid.
         player: The coordinates of the player, represented as a tuple (x, y).
-    
+
     Returns:
         None.
     """
@@ -107,7 +115,7 @@ def draw_map(grid_width: int, grid_height: int, player: Tuple[int, int]) -> None
         print()
 
 
-def create_coordinates(grid_width: int, grid_height: int) -> List[Tuple[int, int]]:
+def create_coordinates(grid_width: int, grid_height: int) -> Coordinates:
     """
     Creates a list of coordinates based on the given grid width and height.
 
@@ -116,20 +124,22 @@ def create_coordinates(grid_width: int, grid_height: int) -> List[Tuple[int, int
         grid_height: An integer specifying the height of the grid.
 
     Returns:
-        A list of coordinates represented as tuples (x, y) within the specified grid dimensions.
+        A list of coordinates represented as tuples (x, y)
+        within the specified grid dimensions.
 
     Example:
         grid_width = 5
         grid_height = 4
         create_coordinates(grid_width, grid_height)
-        # Returns [(0, 0), (0, 1), (0, 2), (0, 3), (1, 0), (1, 1), (1, 2), (1, 3), (2, 0), (2, 1), (2, 2), (2, 3),
+        # Returns [(0, 0), (0, 1), (0, 2), (0, 3), (1, 0), (1, 1), (1, 2), (1, 3),
+        # (2, 0), (2, 1), (2, 2), (2, 3),
         #          (3, 0), (3, 1), (3, 2), (3, 3), (4, 0), (4, 1), (4, 2), (4, 3)]
     """
     grid = [(x, y) for x in range(grid_width) for y in range(grid_height)]
     return grid
 
 
-def get_location(coordinates: List[Tuple[int, int]], population: int) -> List[Tuple[int, int]]:
+def get_location(coordinates: Coordinates, population: int) -> Coordinates:
     """
     Randomly selects a specified number of locations from the given list of coordinates.
 
@@ -148,7 +158,7 @@ def get_location(coordinates: List[Tuple[int, int]], population: int) -> List[Tu
     return random.sample(coordinates, population)
 
 
-def get_valid_positions(grid: List[Tuple[int, int]], player: Tuple[int, int], door: Tuple[int, int]) -> List[Tuple[int, int]]:
+def get_valid_positions(grid: Coordinates, player: Position, door: Position) -> Coordinates: # noqa E501
     """
     Returns a list of all valid positions for a dragon.
 
@@ -164,9 +174,9 @@ def get_valid_positions(grid: List[Tuple[int, int]], player: Tuple[int, int], do
     return valid_positions
 
 
-def move_dragon(dragon: Tuple[int, int], other_dragon: Tuple[int, int], valid_positions: List[Tuple[int, int]]) -> Tuple[int, int]:
+def move_dragon(dragon: Position, other_dragon: Position, valid_positions: Coordinates) -> Position: # noqa E501
     """
-    Moves the dragon to a new random position from the list of valid positions with a 30% probability.
+    Moves the dragon to a new random position from the list of valid positions with a 30% probability. # noqa E501
 
     Args:
         dragon: The current position of the dragon.

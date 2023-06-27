@@ -14,7 +14,7 @@ from helpers.funcs import (
 valid_dimensions = False
 while not valid_dimensions:
     try:
-        x_dimension, y_dimension = input("Please enter the dimensions of your map, like (5, 5): ").split(',')
+        x_dimension, y_dimension = input("Please enter the dimensions of your map, like (5, 5): ").split(',') # noqa E501
         x_dimension = int(x_dimension.strip())
         y_dimension = int(y_dimension.strip())
         valid_dimensions = True
