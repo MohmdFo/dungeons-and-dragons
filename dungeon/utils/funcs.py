@@ -2,8 +2,8 @@ import os
 import random
 from typing import List
 
-from .enums import Direction
-from .types import (
+from dungeon.helpers.enums import Direction
+from dungeon.helpers.types import (
     Position,
     Coordinates
 )
